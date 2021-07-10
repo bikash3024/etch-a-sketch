@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+        Etch-a-sketch
+    </title>
+
+    <style>
+        :root {
+            --background: #2e2e2e;
+            --secondary-background: rgb(109, 109, 109);
+            --button: #555;
+            --button-hover: #444;
+            --button-active: #333;
+            --border: #222;
+        }
+        html{
+            font-family: sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue';
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+
+        #header {
+            width: 100%;
+            padding: 5vh;
+            font-size: 1.6rem;
+        }
+
+        body {
+            background-color: var(--background);
+            text-align: center;
+            color: #fff;
+        }
+
+        #mainContainer {
+            display: grid;
+            grid-template-columns: 30% 70%;
+        }
+
+        #gridContainer {
+            background-color: var(--secondary-background);
+            display: grid;
+            height: 80vh;
+            padding: 10vh 5vh 15vh 5vh;
+        }
+
+        #customizeContainer {
+            height: 80vh;
+        }
+
+        #footer {
+            text-align: left;
+            position: absolute;
+            bottom: 0px;
+            width: 100%;
+            padding: 20px 0 10px 10px;
+            background-color: var(--secondary-background)
+        }
+
+        #customizeHeading {
+            padding: 20px 10px 50px;
+            display: block;
+        }
+
+        #colorSelectDiv {
+            padding: 0 0 75px 0;
+        }
+        .button{
+            padding: 5px 2px 5px 2px;
+            width: 100px;
+            cursor: pointer;
+        }
+
+        #cellSizeSelectDiv {
+            padding: 0 0 75px 0;
+        }
+
+        #resetDiv {
+            padding: 0 0 75px 0;
+        }
+
+        .gridCell {
+            border: 1px solid rgb(240, 232, 232);
+            background-color: #fff;
+        }
+
+        .coloredCell {
+            background-color: rgb(204, 121, 121);
+        }
+    </style>
+</head>
+
+<body>
+    <header id="header">
+        Etch-a-Sketch. Hover to draw something interesting
+    </header>
+    <div id="mainContainer">
+        <div id="customizeContainer">
+            <p id="customizeHeading">Customize color and size of grid cells(Sorry no color selction yet)</p>
+            <div id="colorSelectDiv">
+                <button class="button" id="selectColorButton">Choose color</button>
+            </div>
+            <div id="cellSizeSelectDiv">
+                <button class="button" id="selectSizeButton">Choose size</button>
+            </div>
+            <div id="resetDiv">
+                <button class="button" id="resetButton">Reset</button>
+            </div>
+        </div>
+        <div id="gridContainer">
+        </div>
+    </div>
+    <footer id="footer">the odin project gang</footer>
+</body>
+<script>
+    const gridContainer = document.querySelector('#gridContainer');
+    const resetButton = document.querySelector("#resetButton");
+    let allGridCells;
+    const selectSizeButton = document.querySelector("#selectSizeButton");
+
+    resetButton.addEventListener("click", reset);
+    window.addEventListener("load", setDefaultGrid);
+    selectSizeButton.addEventListener("click", rebuildGrid);
+
+    function setDefaultGrid() {
+        buildGrid(16);
+    }
+
+
+    function buildGrid(noOfCells) {
+        for (let i = 0; i < noOfCells * noOfCells; i++) {
+
+            let gridCell = document.createElement('div');
+            gridCell.classList.add('gridCell');
+            gridCell.addEventListener('mouseover', colorCell)
+            gridContainer.appendChild(gridCell);
+
+
+        }
+
+        allGridCells = Array.from(document.querySelectorAll(".gridCell"));
+        gridContainer.style.gridTemplateColumns = `repeat(${noOfCells}, 1fr)`;
+
+    }
+
+    function reset() {
+        // console.log(allGridCells);
+
+        allGridCells.forEach((cell) => {
+            console.log("inside loop" + cell)
+            cell.classList.remove("coloredCell");
+        });
+
+    }
+    function colorCell(element) {
+        element.target.classList.add("coloredCell");
+    }
+
+    function clearGrid() {
+        const gridArray = Array.from(gridContainer.childNodes);
+        gridArray.forEach((cell) => {
+            gridContainer.removeChild(cell);
+        });
+    }
+
+    function rebuildGrid() {
+        let newSize = parseInt(prompt("Enter desired no of columns(please enter 1 - 60)"));
+
+        if (newSize == null) {
+            return;
+        }
+
+        if (newSize != null && newSize > 0 && newSize <= 60) {
+            clearGrid();
+            buildGrid(newSize);
+        }
+        else {
+           rebuildGrid();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</html>
